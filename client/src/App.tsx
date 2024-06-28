@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
+import LiveChat from "./components/testComponents/socketLiveChat";
 
 export default function App() {
-
   return (
     <div className="min-h-screen">
-      <Button className="bg-foreground text-pretty">Click me</Button>
+        <LiveChat/>      
     </div>
   )
 }

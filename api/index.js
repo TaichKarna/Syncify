@@ -13,7 +13,8 @@ const server = createServer(app);
 const io = new Server(server, {
     cors: {
         origin: 'http://localhost:5173'
-    }
+    },
+    connectionStateRecovery: {}
 });
 
 
@@ -35,10 +36,17 @@ server.listen(3000, () => {
 })
 
 
-//Socke.io 
+//Socket.io 
 io.on('connection', (socket) => {
     console.log('a user connected');
+    socket.on('chat message', (user) => {
+        socket.broadcast.emit('chat message', user)        
+    })
 });
+
+
+
+
 
 
 app.use(express.json());

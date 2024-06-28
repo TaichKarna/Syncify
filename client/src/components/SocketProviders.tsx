@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";;
 import { io } from 'socket.io-client';
+import { useSelector } from "react-redux";
 
 type SockeProviderProps = {
     children: React.ReactNode
@@ -8,12 +9,13 @@ type SockeProviderProps = {
 const SocketContext = createContext(1);
 
 export function SocketProvider({children} : SockeProviderProps){
+    const { currentUser } = useSelector( ( state ) => state.user);
     const URL = "http://localhost:3000";
     const socket = io(URL, { autoConnect: true});
 
-    const value = 1;
+
     return (
-        <SocketContext.Provider value={value}>
+        <SocketContext.Provider value={socket}>
             {children}
         </SocketContext.Provider>
     )

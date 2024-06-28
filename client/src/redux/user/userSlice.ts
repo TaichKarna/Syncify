@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-type state = {
+export type state = {
     currentUser: object | null,
     error: string | null,
     loading : boolean
