@@ -6,7 +6,7 @@ import {Server} from 'socket.io';
 import { createServer } from 'node:http';
 import 'dotenv/config';
 import authRouter from './routes/auth.route.js';
-
+import Rooms from './socket/room.js';
 
 const app = express();
 const server = createServer(app);
@@ -36,11 +36,19 @@ server.listen(3000, () => {
 })
 
 
+const rooms = Rooms();
 //Socket.io 
 io.on('connection', (socket) => {
     console.log('a user connected');
-    socket.on('chat message', (user) => {
-        socket.broadcast.emit('chat message', user)        
+    socket.on('chat message', (user, msg, roomdId) => {
+        socket.join(roomdId);
+        socket.to(roomdId).emit('chat message', user, msg)        
+    })
+
+    socket.on('room create', (user, callback) => {
+        const roomId = rooms.addRoom();
+        rooms.addUserToRoom(roomId,user);
+        callback(roomId);
     })
 });
 

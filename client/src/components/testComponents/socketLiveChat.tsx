@@ -1,20 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSocket } from "../SocketProviders";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 export default function LiveChat(){
-    const socket = useSocket();
     const [messages, setMessages] = useState([]);
     const [msg, setMsg] = useState('');
     const [connection, setConnection] = useState('disconnect');
+    const socket = useSocket();
+    const {roomId} = useParams();
+    const {currentUser} = useSelector(state => state.user);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if(msg === '') return;
-        socket.emit('chat message', msg);
+        setMessages([...messages,msg]);
+        socket.emit('chat message', currentUser, msg, roomId);
         setMsg('');
     }
-    socket.on('chat message', (msg) => {
+    socket.on('chat message', (user, msg) => {
         setMessages([...messages,msg]);
     })
 
@@ -27,9 +32,22 @@ export default function LiveChat(){
             setConnection('disconnect');
         }
     }
+
+    const constraints = {
+        'video' : true,
+        'audio' : true
+    }
+
+    useEffect( () => {
+
+    },[])
     
     return (
-        <div className="flex justify-center flex-col gap-5">
+        <div className="flex justify-between w-full flex-row gap-5 p-5 ">
+            <div className="flex flex-col">
+                <button className="w-20 h-10 text-white bg-black hover:bg-slate-600">Call</button>
+            </div>
+            <div>
             <ul className="text-center">
                 {
                     messages && (
@@ -44,6 +62,7 @@ export default function LiveChat(){
                 <button type="submit" className="w-14 h-10 bg-black text-bold text-white">Send</button>
                 <button type="button" onClick={handleClick} className="w-20 h-10 bg-black text-bold text-white">{connection}</button>
             </form>
+            </div>
         </div>
     );
 }

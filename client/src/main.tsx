@@ -10,11 +10,21 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistor } from './redux/store.js'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import Navbar from './components/Navbar/Navbar.tsx';
+import MainMenu from './components/testComponents/MainMenu.tsx'
+import LiveChat from './components/testComponents/socketLiveChat.tsx'
 
 const router = createBrowserRouter([
 {
   path: '/',
   element: <App/>
+},
+{
+  path: '/room',
+  element: <MainMenu/>
+},
+{
+  path: '/room/:roomId',
+  element: <LiveChat/>
 }
 ])
 
